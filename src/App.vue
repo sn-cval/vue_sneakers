@@ -10,7 +10,7 @@
 
 <script setup>
 import axios from 'axios'
-import { computed, provide, ref, watch } from 'vue'
+import { computed, provide, ref, watch, onMounted } from 'vue'
 
 import Header from './components/Header.vue'
 import Drawer from './components/Drawer.vue'
@@ -61,6 +61,12 @@ provide('cart', {
 })
 
 // Корзина (end)
+
+onMounted(() => {
+  console.log('App mounted successfully')
+  console.log('Base URL:', import.meta.env.BASE_URL)
+  console.log('Mode:', import.meta.env.MODE)
+})
 
 // onMounted(
 //   fetch('https://d8767a27d59da728.mokky.dev/items')

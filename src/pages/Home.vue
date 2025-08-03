@@ -32,6 +32,55 @@ import debounce from 'lodash.debounce'
 import CardList from '../components/CardList.vue'
 import { onMounted, reactive, ref, watch, inject } from 'vue'
 
+// Моковые данные для тестирования
+const mockItems = [
+  {
+    id: 1,
+    title: 'Кроссовки Nike Air Max',
+    price: 12900,
+    imageUrl: '/sneakers/sneakers-1.jpg',
+    isFavorite: false,
+    favoriteId: null,
+    isAdded: false,
+  },
+  {
+    id: 2,
+    title: 'Кроссовки Adidas Ultraboost',
+    price: 15900,
+    imageUrl: '/sneakers/sneakers-2.jpg',
+    isFavorite: false,
+    favoriteId: null,
+    isAdded: false,
+  },
+  {
+    id: 3,
+    title: 'Кроссовки Puma RS-X',
+    price: 8900,
+    imageUrl: '/sneakers/sneakers-3.jpg',
+    isFavorite: false,
+    favoriteId: null,
+    isAdded: false,
+  },
+  {
+    id: 4,
+    title: 'Кроссовки New Balance',
+    price: 11900,
+    imageUrl: '/sneakers/sneakers-4.jpg',
+    isFavorite: false,
+    favoriteId: null,
+    isAdded: false,
+  },
+  {
+    id: 5,
+    title: 'Кроссовки Reebok Classic',
+    price: 9900,
+    imageUrl: '/sneakers/sneakers-5.jpg',
+    isFavorite: false,
+    favoriteId: null,
+    isAdded: false,
+  },
+]
+
 const items = ref([])
 
 const { cart, addToCart, removeFromCart } = inject('cart')
@@ -77,7 +126,9 @@ const addToFavorite = async (item) => {
       item.favoriteId = null
     }
   } catch (error) {
-    console.log(error)
+    console.log('Error with favorites:', error)
+    // Fallback для тестирования
+    item.isFavorite = !item.isFavorite
   }
 }
 
@@ -98,7 +149,7 @@ const fetchFavorites = async () => {
       }
     })
   } catch (error) {
-    console.log(error)
+    console.log('Error fetching favorites:', error)
   }
 }
 
@@ -122,7 +173,9 @@ const fetchItems = async () => {
       isAdded: false,
     }))
   } catch (error) {
-    console.log(error)
+    console.log('Error fetching items:', error)
+    // Используем моковые данные при ошибке
+    items.value = mockItems
   }
 }
 
@@ -130,8 +183,14 @@ onMounted(async () => {
   const localCart = localStorage.getItem('cart')
   cart.value = localCart ? JSON.parse(localCart) : []
 
-  await fetchItems()
-  await fetchFavorites()
+  // Сначала попробуем загрузить реальные данные
+  try {
+    await fetchItems()
+    await fetchFavorites()
+  } catch (error) {
+    console.log('Using mock data due to API error:', error)
+    items.value = mockItems
+  }
 
   items.value = items.value.map((item) => ({
     ...item,
