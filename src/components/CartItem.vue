@@ -8,7 +8,7 @@
         <img
           @click="emit('onClickRemove')"
           class="opacity-40 hover:opacity-100 cursor-pointer transition"
-          src="/close.svg"
+          :src="getImageUrl('/close.svg')"
           alt=""
         />
       </div>
@@ -17,6 +17,12 @@
 </template>
 
 <script setup>
+// Функция для правильного формирования путей к изображениям
+const getImageUrl = (path) => {
+  const baseUrl = import.meta.env.BASE_URL || '/'
+  return baseUrl + path.replace(/^\//, '')
+}
+
 defineProps({
   id: Number,
   imageUrl: String,

@@ -11,7 +11,7 @@
         <option value="-price">По цене (дорогие)</option>
       </select>
       <div class="relative">
-        <img class="absolute left-3 top-3" src="/search.svg" alt="Search" />
+        <img class="absolute left-3 top-3" :src="getImageUrl('/search.svg')" alt="Search" />
         <input
           @input="onChangeSearchInput"
           class="border border-gray-300 rounded-md py-2 pl-11 pr-4 outline-none focus:border-gray-400"

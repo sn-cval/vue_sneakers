@@ -5,7 +5,7 @@
     <img
       v-if="onClickFavorite"
       class="absolute top-8 left-8"
-      :src="isFavorite ? '/like-2.svg' : '/like-1.svg'"
+      :src="isFavorite ? getImageUrl('/like-2.svg') : getImageUrl('/like-1.svg')"
       alt="Like 1"
       @click="onClickFavorite"
     />
@@ -19,7 +19,7 @@
       <img
         v-if="onClickAdd"
         @click="onClickAdd"
-        :src="!isAdded ? '/plus.svg' : '/checked.svg'"
+        :src="!isAdded ? getImageUrl('/plus.svg') : getImageUrl('/checked.svg')"
         alt="Plus"
       />
     </div>
@@ -27,6 +27,12 @@
 </template>
 
 <script setup>
+// Функция для правильного формирования путей к изображениям
+const getImageUrl = (path) => {
+  const baseUrl = import.meta.env.BASE_URL || '/'
+  return baseUrl + path.replace(/^\//, '')
+}
+
 defineProps({
   id: Number,
   imageUrl: String,
