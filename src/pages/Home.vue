@@ -90,6 +90,12 @@ const filters = reactive({
   searchQuery: '',
 })
 
+// Функция для правильного формирования путей к изображениям
+const getImageUrl = (path) => {
+  const baseUrl = import.meta.env.BASE_URL || '/'
+  return baseUrl + path.replace(/^\//, '')
+}
+
 const onClickAddPlus = (item) => {
   if (!item.isAdded) {
     addToCart(item)
@@ -168,6 +174,7 @@ const fetchItems = async () => {
     })
     items.value = data.map((obj) => ({
       ...obj,
+      imageUrl: getImageUrl(obj.imageUrl), // Используем правильный путь
       isFavorite: false,
       favoriteId: null,
       isAdded: false,
@@ -175,7 +182,10 @@ const fetchItems = async () => {
   } catch (error) {
     console.log('Error fetching items:', error)
     // Используем моковые данные при ошибке
-    items.value = mockItems
+    items.value = mockItems.map((item) => ({
+      ...item,
+      imageUrl: getImageUrl(item.imageUrl),
+    }))
   }
 }
 
@@ -189,7 +199,11 @@ onMounted(async () => {
     await fetchFavorites()
   } catch (error) {
     console.log('Using mock data due to API error:', error)
-    items.value = mockItems
+    // Используем правильные пути для моковых данных
+    items.value = mockItems.map((item) => ({
+      ...item,
+      imageUrl: getImageUrl(item.imageUrl),
+    }))
   }
 
   items.value = items.value.map((item) => ({
